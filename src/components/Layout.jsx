@@ -1,21 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
-import {
-  decrement,
-  increment,
-  incrementByAmount,
-  setTimer,
-} from "../feature/counter/counterSlice";
+import { decrement, setTimer } from "../redux/features/counter/counterSlice";
 const Layout = ({ children }) => {
   const count = useSelector((state) => state.counter.value);
   const dispatch = useDispatch();
   const [isRunning, setIsRunning] = useState(false);
-  const [incrementAmount, setIncrementAmount] = useState("2");
   const [totalTime, setTotalTime] = useState("0");
   const intervalId = useRef();
   useEffect(() => {
-    // helper function to stop an existing timer
     const clear = () => {
       if (intervalId.current) {
         clearInterval(intervalId.current);
@@ -43,10 +36,26 @@ const Layout = ({ children }) => {
     return clear;
   }, [dispatch, isRunning, count]);
 
+  let hours = Math.floor(count / (60 * 60));
+
+  let divisor_for_minutes = count % (60 * 60);
+  let minutes = Math.floor(divisor_for_minutes / 60).toLocaleString("en-US", {
+    minimumIntegerDigits: 2,
+    useGrouping: false,
+  });
+
+  let divisor_for_seconds = divisor_for_minutes % 60;
+  let seconds = Math.ceil(divisor_for_seconds).toLocaleString("en-US", {
+    minimumIntegerDigits: 2,
+    useGrouping: false,
+  });
+
   return (
     <div className="min-h-screen relative w-full">
       <div className="absolute top-0 bg-blue-500 w-full p-4 flex flex-col items-center justify-center text-xl">
-        <p className="text-5xl">Time Remaining: {count}</p>
+        <p className="text-5xl">
+          {hours}:{minutes}:{seconds}
+        </p>
         <div className="w-full flex flex-row items-center justify-between">
           <button
             className={`hover:bg-green-300 border p-3 rounded ${

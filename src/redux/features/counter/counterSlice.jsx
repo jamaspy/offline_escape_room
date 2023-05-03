@@ -20,13 +20,22 @@ export const counterSlice = createSlice({
       state.value += action.payload;
     },
     setTimer: (state, action) => {
-      state.value = action.payload;
+      // convert from minutes to seconds
+      state.value = action.payload * 60;
+    },
+    deductTimerByTenMinutes: (state) => {
+      state.value -= 600;
     },
   },
 });
 
-export const { increment, decrement, incrementByAmount, setTimer } =
-  counterSlice.actions;
+export const {
+  increment,
+  decrement,
+  incrementByAmount,
+  setTimer,
+  deductTimerByTenMinutes,
+} = counterSlice.actions;
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
